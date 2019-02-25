@@ -9,7 +9,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import frc.robot.commands.LiftUpBoth;
 import frc.robot.commands.LiftUpBothGyro;
 import frc.robot.commands.LowerDownBoth;
 import frc.robot.commands.EndFrontLift;
@@ -41,15 +40,17 @@ public class OI {
 
   Button liftButton = new JoystickButton(drive3, 12);
   Button lowerButton = new JoystickButton(drive3, 11);
+  Button holdButton = new JoystickButton(drive3, 2);
 
   public OI(){
     
-    liftButton.whenPressed(new LiftUpBothGyro(0.11, 0.0001, 0));
+    liftButton.whenPressed(new LiftUpBothGyro(0.5, 0.06, 0.00000, 0));
     lowerButton.whenPressed(new LowerDownBoth());
     liftButton.whenReleased(new EndLift());
     lowerButton.whenReleased(new EndLift());
-    
 
+    holdButton.whenPressed(new LiftUpBothGyro(0.01, 0.06, 0.00000, 0));
+    
     liftBack.whenPressed(new LiftUpBack());
     lowerBack.whenPressed(new LowerDownBack());
     liftBack.whenReleased(new EndBackLift());

@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class GyroSubsystem extends Subsystem {
   public ADIS16448_IMU imu;
+  public double zeroValue = 0;
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
@@ -35,6 +36,7 @@ public class GyroSubsystem extends Subsystem {
 
   public void calibrate(){
     imu.calibrate();
+    zeroValue = imu.getAngleX();
   }
 
   public double getRotation(){
@@ -42,6 +44,6 @@ public class GyroSubsystem extends Subsystem {
   }
 
   public double getTip(){
-    return imu.getAngleX(); //Positive is forwards
+    return imu.getAngleX() - zeroValue; //Positive is forwards
   }
 }

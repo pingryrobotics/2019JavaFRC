@@ -12,7 +12,7 @@ public class DriveBaseCommands extends Command{
     public void initialize(){}
 
     public void execute(){
-        Robot.drive.move(-Robot.oi.drive1.getRawAxis(1), -Robot.oi.drive2.getRawAxis(1));
+        Robot.drive.move(-Math.pow(Robot.oi.drive1.getRawAxis(1),1)/2, -Math.pow(Robot.oi.drive2.getRawAxis(1),1)/2);
     }
     
     public boolean isFinished(){

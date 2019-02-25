@@ -7,14 +7,15 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.PIDCommand;
 import frc.robot.Robot;
 
 
 public class LiftUpBothGyro extends PIDCommand {
-  public LiftUpBothGyro(double p, double i, double d) {
+  public double power;
+  public LiftUpBothGyro(double power, double p, double i, double d) {
     super("LiftUpGyro", p, i, d);
+    this.power = power;
     requires(Robot.gyro);
     requires(Robot.liftBack);
     requires(Robot.liftFront);
@@ -33,8 +34,8 @@ public class LiftUpBothGyro extends PIDCommand {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void usePIDOutput(double output) {
-    Robot.liftBack.lift(-0.75-output);
-    Robot.liftFront.lift(-0.75+output);
+    Robot.liftBack.lift(-power-output);
+    Robot.liftFront.lift(-power+output);
   }
 
   // Make this return true when this Command no longer needs to run execute()

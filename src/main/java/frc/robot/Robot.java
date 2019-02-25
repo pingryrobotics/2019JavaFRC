@@ -155,6 +155,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
+    gyro.log();
   }
 
   @Override
@@ -168,5 +169,9 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
     gyro.log();
+    SmartDashboard.putNumber("IntakePosition", intakeLift.getPosition());
+    try{
+      wait(10);
+    }catch (InterruptedException e){}
   }
 }
