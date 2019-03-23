@@ -12,6 +12,7 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
@@ -22,12 +23,13 @@ import frc.robot.subsystems.Lift;
 import frc.robot.subsystems.TankDrive;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.IntakeLift;
+import frc.robot.subsystems.Jetson;
 import frc.robot.commands.DriveBaseCommands;
 import frc.robot.commands.EndLift;
-import frc.robot.commands.HoldDrivePosition;
-import frc.robot.commands.ExtendBackJoy;
-import frc.robot.commands.ExtendBothGyro;
-import frc.robot.commands.ExtendFrontJoy;
+import frc.robot.commands.JetsonPowerToggle;
+import frc.robot.commands.LiftUpBackJoy;
+import frc.robot.commands.LiftUpBothGyro;
+import frc.robot.commands.LiftUpFrontJoy;
 import frc.robot.commands.ManualIntakeLift;
 import frc.robot.commands.ZeroGyro;
 import frc.robot.commands.CalibrateGyro;
@@ -49,26 +51,24 @@ public class Robot extends TimedRobot {
   public static TankDrive drive;
   public static IntakeLift intakeLift;
   public static GyroSubsystem gyro; 
+  public static Jetson jetson;
 
   public static DriveBaseCommands driveCommand;
   public static ManualIntakeLift intakeCommand;
   
-  public static ExtendBackJoy liftBackJoy;
-  public static ExtendFrontJoy liftFrontJoy;
-  public static ExtendBothGyro liftBothGyro;
+  public static LiftUpBackJoy liftBackJoy;
+  public static LiftUpFrontJoy liftFrontJoy;
+  public static LiftUpBothGyro liftBothGyro;
+
+  public static JetsonPowerToggle jpt;
 
   public static boolean chassisLiftMode = true;
   static final boolean joysticks = true;
   static final boolean triggers = !joysticks;
 
-  public static NetworkTableEntry yaw;
-  public static NetworkTableEntry slope;
-  public static NetworkTableEntry lineDetected;
-  public static NetworkTableEntry lineX;
-
-  public static final double gyroLiftP = 0.03;
-  public static final double gyroLiftI = 0.0001;
-  public static final double gyroLiftD = 0;
+  public static NetworkTableEntry trajectoryWanted;
+  public static NetworkTableEntry turnJetsonOff;
+  public static DigitalOutput jetsonPower;
 
   public static Timer t;
   
@@ -95,27 +95,31 @@ public class Robot extends TimedRobot {
     intakeCommand = new ManualIntakeLift();
     gyro = new GyroSubsystem();
 
-    liftFrontJoy = new ExtendFrontJoy();
-    liftBackJoy = new ExtendBackJoy();
-    liftBothGyro = new ExtendBothGyro(gyroLiftP, gyroLiftI, gyroLiftD);
+    jetson = new Jetson();
+    jpt = new JetsonPowerToggle();
+
+    liftFrontJoy = new LiftUpFrontJoy();
+    liftBackJoy = new LiftUpBackJoy();
+    liftBothGyro = new LiftUpBothGyro(0.03, 0.0001, 0);
     
    
     oi = new OI();
 
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
     NetworkTable table =inst.getTable("vision");
-    
+    trajectoryWanted = table.getEntry("trajectoryWanted");
+    turnJetsonOff = table.getEntry("turnOff");
+    trajectoryWanted.setValue(false);
+    turnJetsonOff.setValue(false);
     inst.startClientTeam(2577);
+    SmartDashboard.putNumber("Max Drive Power", 1.0);
 
-    yaw = table.getEntry("yaw");
-    slope = table.getEntry("slope");
-    lineDetected = table.getEntry("lineDetected");
-    lineX = table.getEntry("lineX");
-
+    //TAKE THIS OUT:
+    intakeLift.zeroEncoder();
     
     SmartDashboard.putData("Calibrate Gyro", new CalibrateGyro());
     SmartDashboard.putData("Zero Gyro", new ZeroGyro());
-
+    //SmartDashboard.putNumber("exposure", 1);
     SmartDashboard.putNumber("hueMin", 65);
     SmartDashboard.putNumber("hueMax", 140);
     SmartDashboard.putNumber("satMin", 200);
@@ -200,6 +204,7 @@ public class Robot extends TimedRobot {
 
     t = new Timer();
     t.start();
+    jpt.start();
     //intakeCommand.start();
 
     if(chassisLiftMode == triggers){
@@ -223,7 +228,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
-    SmartDashboard.putNumber("IntakePosition", intakeLift.getPosition());
+    //SmartDashboard.putNumber("IntakePosition", intakeLift.getPosition());
     //SmartDashboard.putNumber("Drive Encoder", drive.getLeftPosition()/12);
     if((oi.drive3.getRawAxis(3)> 0.2 || oi.drive3.getRawAxis(2)>0.2) && chassisLiftMode != triggers){
       chassisLiftMode = triggers;
@@ -234,15 +239,14 @@ public class Robot extends TimedRobot {
       liftFrontJoy.start();
       liftBackJoy.start();
     }
+    if(t.get() > 190){
+      turnJetsonOff.setBoolean(false);
+    }
   }
 
-  public HoldDrivePosition h;
   @Override
   public void testInit() {
-
-    //TODO: Make sure HoldDrivePosition works
-    h = new HoldDrivePosition(0.5);
-    //jetson.turnOn();
+    jetson.turnOn();
     //gyro.calibrate();
   }
 
@@ -251,7 +255,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
-    h.start();
     //gyro.log();
     //SmartDashboard.putNumber("Encoder position frontLeft", drive.getLeftPosition());
     //SmartDashboard.putNumber("IntakePosition", intakeLift.getPosition());

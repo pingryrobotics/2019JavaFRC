@@ -9,11 +9,11 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import frc.robot.commands.DriveTowardsTarget;
+import frc.robot.commands.DriveTrajectory;
 import frc.robot.commands.DropHatchOff;
 import frc.robot.commands.IntakeLiftPosition;
 import frc.robot.commands.IntakeLiftPower;
-import frc.robot.commands.LineFollowing;
+import frc.robot.commands.JetsonPowerToggle;
 import edu.wpi.first.wpilibj.Joystick;
 
 
@@ -23,11 +23,12 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class OI {
   
-  public Joystick drive1 = new Joystick(1);
-  public Joystick drive2 = new Joystick(0);
+  public Joystick drive1 = new Joystick(0);
+  public Joystick drive2 = new Joystick(1);
   public Joystick drive3 = new Joystick(2);
 
-  //TODO: Configure controls for Auto-raise, manual raise, and hatch panel controls for Brian
+  Button jpt = new JoystickButton(drive1, 6);
+
   Button lowerPost = new JoystickButton(drive3, 5);
   Button raisePost = new JoystickButton(drive3, 6);
 
@@ -46,11 +47,10 @@ public class OI {
   Button lowerPost2 = new JoystickButton(drive2, 2);
   Button raisePost2 = new JoystickButton(drive2, 3);
 
-  //TODO: Find out what buttons to use for this
-  Button followTarget = new JoystickButton(drive2, 1);
-  Button followLine = new JoystickButton(drive2, 2);
+  Button visionTracking = new JoystickButton(drive2, 1);
 
   public OI(){
+    jpt.whenPressed(new JetsonPowerToggle());
 
     highRocket.whenPressed(new IntakeLiftPosition(73.5));
     highRocket2.whenPressed(new IntakeLiftPosition(73.5));
@@ -61,12 +61,8 @@ public class OI {
 
     collectHatch2.whenPressed(new IntakeLiftPosition(16));
 
-    followTarget.whenPressed(new DriveTowardsTarget(0.5, 0.2));
-    followTarget.whenReleased(Robot.driveCommand);
-
-    //TODO: Tune P-values for line following
-    followLine.whenPressed(new LineFollowing(0.1, 0, 0.2, 0.1));
-    followLine.whenReleased(Robot.driveCommand);
+    visionTracking.whenPressed(new DriveTrajectory());
+    visionTracking.whenReleased(Robot.driveCommand);
 
 
     lowerPost.whenPressed(new IntakeLiftPower(-0.5));

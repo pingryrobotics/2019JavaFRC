@@ -19,7 +19,7 @@ public class DriveBaseCommands extends Command{
         }else if(Robot.oi.drive1.getRawButton(10) || Robot.oi.drive2.getRawButton(4)){
             Robot.drive.move(-0.15, -0.15);
         }else{
-            Robot.drive.move(-Math.pow(Robot.oi.drive2.getRawAxis(1),1)*driveFactor, -Math.pow(Robot.oi.drive1.getRawAxis(1),1)*driveFactor);
+            Robot.drive.move(-Math.pow(Robot.oi.drive1.getRawAxis(1),1)*driveFactor, -Math.pow(Robot.oi.drive2.getRawAxis(1),1)*driveFactor);
         }
     }
 

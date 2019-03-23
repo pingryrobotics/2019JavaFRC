@@ -3,16 +3,16 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
 
-public class EndBackLift extends Command{
+public class EndFrontLift extends Command{
 
     public boolean isFinished(){
-        return true;
+        return false;
     }
-    public EndBackLift(){
-        requires(Robot.liftBack);
+    public EndFrontLift(){
+        requires(Robot.liftFront);
     }
     public void execute(){
-        Robot.liftBack.lift(0);
+        Robot.liftFront.lift(0);
     }
 
 }

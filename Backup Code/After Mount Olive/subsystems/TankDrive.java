@@ -19,7 +19,7 @@ public class TankDrive extends Subsystem{
     TalonSRX backRight;
     TalonSRX backLeft;*/
     
-    public double powerCoef = 1.0;
+    public double powerCoef = 0.9;
     
 
     public TankDrive() {
@@ -43,7 +43,7 @@ public class TankDrive extends Subsystem{
     public void initDefaultCommand(){}
 
     public double getRightPosition(){
-        return -ticksToInches(frontRight.getEncoder().getPosition());
+        return ticksToInches(frontRight.getEncoder().getPosition());
     }
 
     public double getLeftPosition(){
@@ -70,8 +70,8 @@ public class TankDrive extends Subsystem{
         backLeft.set(ControlMode.PercentOutput,pow2*powerCoef);
     }*/
 
-    public void move(double leftPow, double rightPow){
-        frontRight.set(-rightPow*powerCoef);
-        frontLeft.set(leftPow*powerCoef);
+    public void move(double pow1, double pow2){
+        frontRight.set(-pow1*powerCoef);
+        frontLeft.set(pow2*powerCoef);
     }
 }
