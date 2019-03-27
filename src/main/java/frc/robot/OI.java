@@ -9,8 +9,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import frc.robot.commands.AutoLift;
 import frc.robot.commands.DriveTowardsTarget;
 import frc.robot.commands.DropHatchOff;
+import frc.robot.commands.ExtendBoth;
 import frc.robot.commands.IntakeLiftPosition;
 import frc.robot.commands.IntakeLiftPower;
 import frc.robot.commands.LineFollowing;
@@ -28,6 +30,9 @@ public class OI {
   public Joystick drive3 = new Joystick(2);
 
   //TODO: Configure controls for Auto-raise, manual raise, and hatch panel controls for Brian
+  Button autoClimb = new JoystickButton(drive3, 8);
+  Button cancelClimb = new JoystickButton(drive3, 7);
+
   Button lowerPost = new JoystickButton(drive3, 5);
   Button raisePost = new JoystickButton(drive3, 6);
 
@@ -67,6 +72,9 @@ public class OI {
     //TODO: Tune P-values for line following
     followLine.whenPressed(new LineFollowing(0.1, 0, 0.2, 0.1));
     followLine.whenReleased(Robot.driveCommand);
+
+    autoClimb.whenPressed(new AutoLift());
+    cancelClimb.whenPressed(new ExtendBoth(-1.0));
 
 
     lowerPost.whenPressed(new IntakeLiftPower(-0.5));

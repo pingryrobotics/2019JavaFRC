@@ -12,6 +12,12 @@ import frc.robot.Robot;
 
 
 public class ExtendBothGyro extends PIDCommand {
+  /**
+   * Extends both drive chassis lifts with a PID control loop
+   * @param p The proportional error gain
+   * @param i The integral error gain
+   * @param d The derivative error gain
+   */
   public ExtendBothGyro(double p, double i, double d) {
     super("LiftUpGyro", p, i, d);
     requires(Robot.gyro);

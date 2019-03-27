@@ -12,6 +12,9 @@ import frc.robot.Robot;
 
 
 public class HoldChassisHeight extends PIDCommand {
+  /**
+   * Holds the current chassis height using the gyro to ensure that the robot stays level
+   */
   public HoldChassisHeight(double p, double i, double d) {
     super("HoldChassisHeight", p, i, d);
     requires(Robot.gyro);

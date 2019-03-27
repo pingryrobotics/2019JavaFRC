@@ -3,12 +3,12 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
 public class ExtendBoth extends Command{
+    double power;
+
     /**
      * Extends both drive chassis at the specified power
      * @param power Speed (-1 to 1) to extend. Negative will retract.
      */
-
-    double power;
     public ExtendBoth(double power){
         this.power = power;
         requires(Robot.liftBack);
@@ -23,7 +23,7 @@ public class ExtendBoth extends Command{
     }
 
     public boolean isFinished(){
-        return true;
+        return false;
     }
 
 }

@@ -4,10 +4,6 @@ import frc.robot.Robot;
 
 
 public class EndLift extends Command{
-
-    public boolean isFinished(){
-        return false;
-    }
     public EndLift(){
         requires(Robot.liftBack);
         requires(Robot.liftFront);
@@ -16,5 +12,7 @@ public class EndLift extends Command{
         Robot.liftBack.lift(0);
         Robot.liftFront.lift(0);
     }
-
+    public boolean isFinished(){
+        return false;
+    }
 }

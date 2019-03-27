@@ -2,6 +2,10 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 public class ExtendBackJoy extends Command{
+
+    /**
+     * Extends the back drive wheels according to the joystick values.
+     */
     public ExtendBackJoy(){
         requires(Robot.liftBack);
     }

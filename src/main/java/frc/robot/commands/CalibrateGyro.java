@@ -5,13 +5,18 @@ import frc.robot.Robot;
 
 public class CalibrateGyro extends Command{
 
-    public boolean isFinished(){
-        return false;
-    }
+    /**
+     * Calibrates the gyroscope. Takes approximately 10 seconds.
+     */
     public CalibrateGyro(){
         requires(Robot.gyro);
         setTimeout(5000);
     }
+
+    public boolean isFinished(){
+        return false;
+    }
+
     public void execute(){
         Robot.gyro.calibrate();
     }

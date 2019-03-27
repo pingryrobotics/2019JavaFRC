@@ -21,15 +21,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Lift;
 import frc.robot.subsystems.TankDrive;
 import frc.robot.subsystems.GyroSubsystem;
-import frc.robot.subsystems.IntakeLift;
+import frc.robot.subsystems.Intake;
 import frc.robot.commands.DriveBaseCommands;
 import frc.robot.commands.EndLift;
 import frc.robot.commands.HoldDrivePosition;
 import frc.robot.commands.ExtendBackJoy;
 import frc.robot.commands.ExtendBothGyro;
 import frc.robot.commands.ExtendFrontJoy;
-import frc.robot.commands.ManualIntakeLift;
+import frc.robot.commands.ManualIntake;
 import frc.robot.commands.ZeroGyro;
+import frc.robot.commands.AutoLift;
 import frc.robot.commands.CalibrateGyro;
 import frc.robot.OI;
 
@@ -47,15 +48,17 @@ public class Robot extends TimedRobot {
   public static Lift liftBack;
   public static EndLift endLift;
   public static TankDrive drive;
-  public static IntakeLift intakeLift;
+  public static Intake intake;
   public static GyroSubsystem gyro; 
 
   public static DriveBaseCommands driveCommand;
-  public static ManualIntakeLift intakeCommand;
+  //public static ManualIntake intakeCommand;
   
   public static ExtendBackJoy liftBackJoy;
   public static ExtendFrontJoy liftFrontJoy;
   public static ExtendBothGyro liftBothGyro;
+
+  public static AutoLift autoLift;
 
   public static boolean chassisLiftMode = true;
   static final boolean joysticks = true;
@@ -89,16 +92,15 @@ public class Robot extends TimedRobot {
     liftFront = new Lift(RobotMap.frontTalon);
     liftBack = new Lift(RobotMap.backTalon);
     drive = new TankDrive();
-    intakeLift = new IntakeLift(0, 0.005, 0, 0);
+    intake = new Intake(0, 0.005, 0, 0);
     driveCommand = new DriveBaseCommands();
     endLift = new EndLift();
-    intakeCommand = new ManualIntakeLift();
     gyro = new GyroSubsystem();
 
     liftFrontJoy = new ExtendFrontJoy();
     liftBackJoy = new ExtendBackJoy();
     liftBothGyro = new ExtendBothGyro(gyroLiftP, gyroLiftI, gyroLiftD);
-    
+    autoLift = new AutoLift();
    
     oi = new OI();
 
@@ -145,10 +147,6 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     driveCommand.cancel();
-    //intakeCommand.cancel();
-
-    drive.move(0,0);
-    //intakeLift.go(0);
   }
 
   @Override
@@ -223,7 +221,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
-    SmartDashboard.putNumber("IntakePosition", intakeLift.getPosition());
+    SmartDashboard.putNumber("IntakePosition", intake.getPosition());
+    SmartDashboard.putNumber("Encoder position back lift", liftBack.getPosition());
     //SmartDashboard.putNumber("Drive Encoder", drive.getLeftPosition()/12);
     if((oi.drive3.getRawAxis(3)> 0.2 || oi.drive3.getRawAxis(2)>0.2) && chassisLiftMode != triggers){
       chassisLiftMode = triggers;
@@ -241,7 +240,9 @@ public class Robot extends TimedRobot {
   public void testInit() {
 
     //TODO: Make sure HoldDrivePosition works
-    h = new HoldDrivePosition(0.5);
+    //h = new HoldDrivePosition(10);
+    //h.start();
+    autoLift.start();
     //jetson.turnOn();
     //gyro.calibrate();
   }
@@ -251,9 +252,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
-    h.start();
+    
     //gyro.log();
-    //SmartDashboard.putNumber("Encoder position frontLeft", drive.getLeftPosition());
-    //SmartDashboard.putNumber("IntakePosition", intakeLift.getPosition());
+    
+    //SmartDashboard.putNumber("IntakePosition", intake.getPosition());
   }
 }

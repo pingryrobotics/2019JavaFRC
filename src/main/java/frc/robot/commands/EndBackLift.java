@@ -4,15 +4,14 @@ import frc.robot.Robot;
 
 
 public class EndBackLift extends Command{
-
-    public boolean isFinished(){
-        return true;
-    }
     public EndBackLift(){
         requires(Robot.liftBack);
     }
     public void execute(){
         Robot.liftBack.lift(0);
+    }
+    public boolean isFinished(){
+        return false;
     }
 
 }

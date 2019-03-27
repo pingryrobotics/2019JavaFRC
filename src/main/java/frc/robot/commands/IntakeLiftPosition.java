@@ -6,12 +6,12 @@ public class IntakeLiftPosition extends Command{
     double pos;
     public IntakeLiftPosition(double position){
       this.pos = position;
-      requires(Robot.intakeLift);
+      requires(Robot.intake);
     }
 
     @Override
     public void initialize(){
-      Robot.intakeLift.goToPosition(pos);
+      Robot.intake.goToPosition(pos);
     }
 
     @Override

@@ -3,6 +3,9 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
 public class ExtendFrontJoy extends Command{
+    /**
+     * Extends the front drive wheels using the value from the joysticks
+     */
     public ExtendFrontJoy(){
         requires(Robot.liftFront);
     }

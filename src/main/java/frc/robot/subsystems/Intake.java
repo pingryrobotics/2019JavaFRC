@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
 
 
-public class IntakeLift extends Subsystem{
+public class Intake extends Subsystem{
     TalonSRX shaft;
     int timeout = 30;
     int minPositionEncoder = 0;
@@ -24,7 +24,7 @@ public class IntakeLift extends Subsystem{
        
     }
 
-    public IntakeLift(double f, double p, double i, double d){
+    public Intake(double f, double p, double i, double d){
         shaft = new TalonSRX(RobotMap.liftTalon);
         shaft.setInverted(true);
         shaft.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, timeout);

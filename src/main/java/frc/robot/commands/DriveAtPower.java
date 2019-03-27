@@ -12,6 +12,12 @@ import frc.robot.Robot;
 
 public class DriveAtPower extends Command {
   double power;
+
+  /**
+   * Drives at a given power for a given time.
+   * @param power Power to drive at
+   * @param time Time to drive for before timing out.
+   */
   public DriveAtPower(double power, double time) {
     setTimeout(time);
     requires(Robot.drive);

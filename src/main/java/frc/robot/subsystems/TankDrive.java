@@ -22,12 +22,17 @@ public class TankDrive extends Subsystem{
     public double powerCoef = 1.0;
     
 
+    /**
+     * Drive base
+     */
     public TankDrive() {
-        
-        /*frontRight = new TalonSRX(RobotMap.frontRightID);
+        /*
+        //Talon SRX's for test robot
+        frontRight = new TalonSRX(RobotMap.frontRightID);
         frontLeft = new TalonSRX(RobotMap.frontLeftID);
         backRight = new TalonSRX(RobotMap.backRightID);
-        backLeft = new TalonSRX(RobotMap.backLeftID);*/
+        backLeft = new TalonSRX(RobotMap.backLeftID);
+        */
         
         frontRight = new CANSparkMax(RobotMap.frontRightID, MotorType.kBrushless);
         frontLeft = new CANSparkMax(RobotMap.frontLeftID, MotorType.kBrushless);

@@ -14,6 +14,16 @@ public class RaiseChassisToHeight extends PIDCommand {
   double endPosition;
   double pAccel;
   double powerLimit;
+
+  /**
+   * Raises the chassis to a specific height using a double p controller. Uses gyro to lift and vertical position to decelerate
+   * @param powerLimit Max power to raise the chassis at
+   * @param pAccel Deceleration constant for proportional controller (% power per inch)
+   * @param targetPosition Target lift height
+   * @param p Proportional gain for gyro hold angle controller
+   * @param i Integral gain for gyro hold angle controller
+   * @param d Derivative gain for gyro hold angle controller
+   */
   public RaiseChassisToHeight(double powerLimit, double pAccel, double targetPosition, double p, double i, double d) {
     super("RaiseChassisToHeight", p, i, d);
     endPosition = targetPosition;
@@ -53,11 +63,11 @@ public class RaiseChassisToHeight extends PIDCommand {
     }*/
 
     //We need to decelerate:
-    double error = current - endPosition;
-    power = powerLimit*(Math.max(-1, Math.min(1, pAccel*error)));
+    double error = endPosition - current; //Error will normally be positive
+    power = powerLimit*(Math.max(-1, Math.min(1, pAccel*error))); //Power will be positive
     
     //Lifts at the power just calculated, but correcting for gyro tip
-    Robot.liftBack.lift(-power-output);
+    Robot.liftBack.lift(-power-output); //power is negative since we need to extend.
     Robot.liftFront.lift(-power+output);
   }
 
@@ -67,9 +77,10 @@ public class RaiseChassisToHeight extends PIDCommand {
     return endPosition - Robot.liftBack.getPosition() < 0.5;
   }
 
-  // Called once after isFinished returns true
   @Override
   protected void end() {
+    Robot.liftBack.lift(0);
+    Robot.liftFront.lift(0);
   }
 
   // Called when another command which requires one or more of the same

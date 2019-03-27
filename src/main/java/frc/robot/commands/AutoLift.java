@@ -12,13 +12,15 @@ import frc.robot.Robot;
 
 public class AutoLift extends CommandGroup {
   /**
-   * Add your docs here.
+   * Automatically lifts the robot and climbs the habitat.
+   * Assumes the robot is already lined up in front of platform.
    */
   public AutoLift() {
+    addSequential(new ZeroGyro());
     //Make sure we don't move while lifting up chassis
     addParallel(new HoldDrivePosition(0.5));
     //TODO: Tune maxPower, pAccel, target height
-    addSequential(new RaiseChassisToHeight(0.4, 0.10, 21, Robot.gyroLiftP, Robot.gyroLiftI, Robot.gyroLiftD));
+    addSequential(new RaiseChassisToHeight(0.4, 0.10, 24, Robot.gyroLiftP, Robot.gyroLiftI, Robot.gyroLiftD));
 
     //Hold our height while driving forward to get front idlers on platform
     addParallel(new HoldChassisHeight(Robot.gyroLiftP, Robot.gyroLiftI, Robot.gyroLiftD));

@@ -20,11 +20,8 @@ public class HoldDrivePosition extends Command {
    * @param p Proportional gain on encoder error (How aggressively to resist change in position)
    */
   public HoldDrivePosition(double p) {
-
     this.p = p;
     requires(Robot.drive);
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
   }
 
   // Called just before this Command runs the first time

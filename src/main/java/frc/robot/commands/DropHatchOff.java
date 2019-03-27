@@ -11,12 +11,15 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
 public class DropHatchOff extends Command {
+  /**
+   * Drops the intake 4 inches to drop the hatch into position.
+   */
   public DropHatchOff() {
-    requires(Robot.intakeLift);
+    requires(Robot.intake);
   }
 
   protected void initialize(){
-    Robot.intakeLift.goToPosition(Robot.intakeLift.getPositionInches() - 4);
+    Robot.intake.goToPosition(Robot.intake.getPositionInches() - 4);
   }
   
   // Called repeatedly when this Command is scheduled to run
@@ -35,6 +38,6 @@ public class DropHatchOff extends Command {
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    Robot.intakeLift.go(0);
+    Robot.intake.go(0);
   }
 }
