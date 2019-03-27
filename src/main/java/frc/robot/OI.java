@@ -65,7 +65,7 @@ public class OI {
     lowRocket2.whenPressed(new IntakeLiftPosition(21));
 
     collectHatch2.whenPressed(new IntakeLiftPosition(16));
-
+    //TODO: remove if not necessary (if DriveBaseCommands change works)
     followTarget.whenPressed(new DriveTowardsTarget(0.5, 0.2));
     followTarget.whenReleased(Robot.driveCommand);
 
