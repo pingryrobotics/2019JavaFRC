@@ -27,19 +27,15 @@ public class DriveBaseCommands extends Command{
         }else if(Robot.oi.drive1.getRawButton(10) || Robot.oi.drive2.getRawButton(4)){
             leftPow = -0.15;
             rightPow = -0.15;
+        }else if (robot.oi.getRawButton(buttonNum)){ //TODO: find button number, tune pTurn
+            double steeringModifier = Robot.tx.getDouble(0)*pTurn;
+            leftPow += steeringModifier;
+            rightPow -= steeringModifier;
         }else{
             //Regular move
             leftPow = -Math.pow(Robot.oi.drive2.getRawAxis(1),1)*driveFactor;
             rightPow = -Math.pow(Robot.oi.drive1.getRawAxis(1),1)*driveFactor;
-            
-            //TODO: find button number, tune pTurn
-            if (robot.oi.getRawButton(buttonNum)){
-                double steeringModifier = Robot.tx.getDouble(0)*pTurn;
-                leftPow += steeringModifier;
-                rightPow -= steeringModifier;
-            }
         }
-
         Robot.drive.move(leftPow,rightPow)
     }
 
