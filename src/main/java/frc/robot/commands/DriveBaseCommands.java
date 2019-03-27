@@ -8,6 +8,7 @@ public class DriveBaseCommands extends Command{
     /**
      * Drive commands for tank drive using joysticks
      */
+    private double pTurn;
     public DriveBaseCommands(){
         super("Drive Base Commands");
         requires(Robot.drive);
@@ -17,16 +18,29 @@ public class DriveBaseCommands extends Command{
     public void execute(){
         //Allows us to slow down driving as necessary.
         double driveFactor = Robot.oi.drive1.getRawAxis(2);
-
+        double leftPow = 0;
+        double rightPow = 0;
         //Fine motor controls
         if(Robot.oi.drive1.getRawButton(11) || Robot.oi.drive2.getRawButton(5)){
-            Robot.drive.move(0.15, 0.15);
+            leftPow = 0.15;
+            rightPow = 0.15;
         }else if(Robot.oi.drive1.getRawButton(10) || Robot.oi.drive2.getRawButton(4)){
-            Robot.drive.move(-0.15, -0.15);
+            leftPow = -0.15;
+            rightPow = -0.15;
         }else{
             //Regular move
-            Robot.drive.move(-Math.pow(Robot.oi.drive2.getRawAxis(1),1)*driveFactor, -Math.pow(Robot.oi.drive1.getRawAxis(1),1)*driveFactor);
+            leftPow = -Math.pow(Robot.oi.drive2.getRawAxis(1),1)*driveFactor;
+            rightPow = -Math.pow(Robot.oi.drive1.getRawAxis(1),1)*driveFactor;
+            
+            //TODO: find button number, tune pTurn
+            if (robot.oi.getRawButton(buttonNum)){
+                double steeringModifier = Robot.tx.getDouble(0)*pTurn;
+                leftPow += steeringModifier;
+                rightPow -= steeringModifier;
+            }
         }
+
+        Robot.drive.move(leftPow,rightPow)
     }
 
     @Override
