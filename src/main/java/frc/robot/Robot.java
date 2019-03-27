@@ -64,7 +64,7 @@ public class Robot extends TimedRobot {
   static final boolean joysticks = true;
   static final boolean triggers = !joysticks;
 
-  public static NetworkTableEntry yaw;
+  public static NetworkTableEntry tx;
   public static NetworkTableEntry slope;
   public static NetworkTableEntry lineDetected;
   public static NetworkTableEntry lineX;
@@ -106,10 +106,10 @@ public class Robot extends TimedRobot {
 
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
     NetworkTable table =inst.getTable("vision");
-    
+    NetworkTable ll = inst.getTable("limelight");
     inst.startClientTeam(2577);
 
-    yaw = table.getEntry("yaw");
+    tx = ll.getEntry("tx").getDouble(0);
     slope = table.getEntry("slope");
     lineDetected = table.getEntry("lineDetected");
     lineX = table.getEntry("lineX");
