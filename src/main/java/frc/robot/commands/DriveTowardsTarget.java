@@ -34,7 +34,7 @@ public class DriveTowardsTarget extends Command {
   @Override
   protected void execute() {
     //If positive, the target is to our right and we need to turn left
-    double turnError = Robot.yaw.getDouble(0)*pTurn;
+    double turnError = Robot.tx.getDouble(0)*pTurn;
 
     Robot.drive.move(power - turnError, power + turnError);
   }

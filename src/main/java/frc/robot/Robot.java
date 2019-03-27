@@ -109,7 +109,7 @@ public class Robot extends TimedRobot {
     NetworkTable ll = inst.getTable("limelight");
     inst.startClientTeam(2577);
 
-    tx = ll.getEntry("tx").getDouble(0);
+    tx = ll.getEntry("tx"); //Note: in degrees
     slope = table.getEntry("slope");
     lineDetected = table.getEntry("lineDetected");
     lineX = table.getEntry("lineX");
