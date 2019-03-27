@@ -110,9 +110,9 @@ public class Robot extends TimedRobot {
     inst.startClientTeam(2577);
 
     tx = ll.getEntry("tx"); //Note: in degrees
-    slope = table.getEntry("slope");
-    lineDetected = table.getEntry("lineDetected");
-    lineX = table.getEntry("lineX");
+    slope = SmartDashboard.getEntry("slope");
+    lineDetected = SmartDashboard.getEntry("lineDetected");
+    lineX = SmartDashboard.getEntry("lineX");
 
     
     SmartDashboard.putData("Calibrate Gyro", new CalibrateGyro());
