@@ -9,7 +9,8 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
-//Soon to be deprecated
+
+
 public class DriveTowardsTarget extends Command {
   double power;
   double pTurn;

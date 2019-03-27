@@ -28,7 +28,7 @@ import frc.robot.commands.HoldDrivePosition;
 import frc.robot.commands.ExtendBackJoy;
 import frc.robot.commands.ExtendBothGyro;
 import frc.robot.commands.ExtendFrontJoy;
-import frc.robot.commands.ManualIntake;
+//import frc.robot.commands.ManualIntake;
 import frc.robot.commands.ZeroGyro;
 import frc.robot.commands.AutoLift;
 import frc.robot.commands.CalibrateGyro;
@@ -240,9 +240,9 @@ public class Robot extends TimedRobot {
   public void testInit() {
 
     //TODO: Make sure HoldDrivePosition works
-    //h = new HoldDrivePosition(10);
-    //h.start();
-    autoLift.start();
+    h = new HoldDrivePosition(10);
+    h.start();
+    //autoLift.start();
     //jetson.turnOn();
     //gyro.calibrate();
   }
@@ -252,6 +252,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+
+    Scheduler.getInstance().run();
     
     //gyro.log();
     

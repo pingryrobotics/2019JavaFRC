@@ -8,7 +8,6 @@ public class DriveBaseCommands extends Command{
     /**
      * Drive commands for tank drive using joysticks
      */
-    private double pTurn;
     public DriveBaseCommands(){
         super("Drive Base Commands");
         requires(Robot.drive);
@@ -27,16 +26,18 @@ public class DriveBaseCommands extends Command{
         }else if(Robot.oi.drive1.getRawButton(10) || Robot.oi.drive2.getRawButton(4)){
             leftPow = -0.15;
             rightPow = -0.15;
-        }else if (robot.oi.getRawButton(buttonNum)){ //TODO: find button number, tune pTurn
+        }else if (Robot.oi.drive2.getRawButton(1)){ //TODO: find button number, tune pTurn
+            double pTurn = 0.01; //Power % per degree
             double steeringModifier = Robot.tx.getDouble(0)*pTurn;
-            leftPow += steeringModifier;
-            rightPow -= steeringModifier;
+            double forwardPower = 0.6;
+            leftPow = forwardPower + steeringModifier;
+            rightPow = forwardPower -  steeringModifier;
         }else{
             //Regular move
             leftPow = -Math.pow(Robot.oi.drive2.getRawAxis(1),1)*driveFactor;
             rightPow = -Math.pow(Robot.oi.drive1.getRawAxis(1),1)*driveFactor;
         }
-        Robot.drive.move(leftPow,rightPow)
+        Robot.drive.move(leftPow,rightPow);
     }
 
     @Override

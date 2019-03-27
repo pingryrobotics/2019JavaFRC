@@ -48,24 +48,42 @@ public class Intake extends Subsystem{
 
     private double inchesToTicks(double inches){return ((inches-minPositionInches)*ticksPerInch) + minPositionEncoder;}
 
+    /**
+     * Gets the current position of the encoder
+     * @return Current position in ticks
+     */
     public double getPosition(){
         return shaft.getSelectedSensorPosition();
     }
 
+    /**
+     * Gets the current position of the encoder converted to inches
+     * @return
+     */
     public double getPositionInches(){
         return ticksToInches(getPosition());
     }
     
+    /**
+     * Resets the encoders current position to 0
+     */
     public void zeroEncoder(){
         shaft.setSelectedSensorPosition(0, 0, timeout);
     }
 
+    /**
+     * Sets the intake motor power to a value
+     * @param pow Power to set the motor to
+     */
     public void go(double pow){
         shaft.set(ControlMode.PercentOutput, pow);
     }
 
+    /**
+     * Sets the intake motor target position
+     * @param position Target position in inches
+     */
     public void goToPosition(double position){
         shaft.set(ControlMode.Position, inchesToTicks(position));
-        System.out.println("Target Intake Position "+inchesToTicks(position));
     }
 }

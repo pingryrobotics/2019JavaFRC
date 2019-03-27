@@ -2,9 +2,9 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class IntakeLiftPosition extends Command{
+public class IntakePosition extends Command{
     double pos;
-    public IntakeLiftPosition(double position){
+    public IntakePosition(double position){
       this.pos = position;
       requires(Robot.intake);
     }
@@ -20,6 +20,12 @@ public class IntakeLiftPosition extends Command{
     }
 
     public boolean isFinished(){
-        return false;
+        //TODO: Add in a threshold for this
+        return Robot.intake.getPositionInches() == this.pos;
+    }
+
+    @Override
+    public void end(){
+      Robot.intake.go(0);
     }
 }

@@ -10,11 +10,11 @@ package frc.robot;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.robot.commands.AutoLift;
-import frc.robot.commands.DriveTowardsTarget;
+//import frc.robot.commands.DriveTowardsTarget;
 import frc.robot.commands.DropHatchOff;
 import frc.robot.commands.ExtendBoth;
-import frc.robot.commands.IntakeLiftPosition;
-import frc.robot.commands.IntakeLiftPower;
+import frc.robot.commands.IntakePosition;
+import frc.robot.commands.IntakePower;
 import frc.robot.commands.LineFollowing;
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -51,23 +51,18 @@ public class OI {
   Button lowerPost2 = new JoystickButton(drive2, 2);
   Button raisePost2 = new JoystickButton(drive2, 3);
 
-  //TODO: Find out what buttons to use for this
-  Button followTarget = new JoystickButton(drive2, 1);
   Button followLine = new JoystickButton(drive2, 2);
 
   public OI(){
 
-    highRocket.whenPressed(new IntakeLiftPosition(73.5));
-    highRocket2.whenPressed(new IntakeLiftPosition(73.5));
-    midRocket.whenPressed(new IntakeLiftPosition(47));
-    midRocket2.whenPressed(new IntakeLiftPosition(47));
-    lowRocket.whenPressed(new IntakeLiftPosition(21));
-    lowRocket2.whenPressed(new IntakeLiftPosition(21));
+    highRocket.whenPressed(new IntakePosition(73.5));
+    highRocket2.whenPressed(new IntakePosition(73.5));
+    midRocket.whenPressed(new IntakePosition(47));
+    midRocket2.whenPressed(new IntakePosition(47));
+    lowRocket.whenPressed(new IntakePosition(21));
+    lowRocket2.whenPressed(new IntakePosition(21));
 
-    collectHatch2.whenPressed(new IntakeLiftPosition(16));
-    //TODO: remove if not necessary (if DriveBaseCommands change works)
-    followTarget.whenPressed(new DriveTowardsTarget(0.5, 0.2));
-    followTarget.whenReleased(Robot.driveCommand);
+    collectHatch2.whenPressed(new IntakePosition(16));
 
     //TODO: Tune P-values for line following
     followLine.whenPressed(new LineFollowing(0.1, 0, 0.2, 0.1));
@@ -77,15 +72,15 @@ public class OI {
     cancelClimb.whenPressed(new ExtendBoth(-1.0));
 
 
-    lowerPost.whenPressed(new IntakeLiftPower(-0.5));
-    lowerPost.whenReleased(new IntakeLiftPower(0));
-    lowerPost2.whenPressed(new IntakeLiftPower(-0.5));
-    lowerPost2.whenReleased(new IntakeLiftPower(0));
+    lowerPost.whenPressed(new IntakePower(-0.5));
+    lowerPost.whenReleased(new IntakePower(0));
+    lowerPost2.whenPressed(new IntakePower(-0.5));
+    lowerPost2.whenReleased(new IntakePower(0));
 
-    raisePost.whenPressed(new IntakeLiftPower(0.5));
-    raisePost.whenReleased(new IntakeLiftPower(0));
-    raisePost2.whenPressed(new IntakeLiftPower(0.5));
-    raisePost2.whenReleased(new IntakeLiftPower(0));
+    raisePost.whenPressed(new IntakePower(0.5));
+    raisePost.whenReleased(new IntakePower(0));
+    raisePost2.whenPressed(new IntakePower(0.5));
+    raisePost2.whenReleased(new IntakePower(0));
 
     dropHatch.whenPressed(new DropHatchOff());
     dropHatch2.whenPressed(new DropHatchOff());

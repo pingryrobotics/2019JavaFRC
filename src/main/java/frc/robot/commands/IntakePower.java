@@ -2,13 +2,13 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class IntakeLiftPower extends Command{
+public class IntakePower extends Command{
     double power;
     /**
      * Moves the intake up or down using the given power
      * @param power Power to move at (-1 to 1) where +1 moves up.
      */
-    public IntakeLiftPower(double power){
+    public IntakePower(double power){
       this.power = power;
       requires(Robot.intake);
     }

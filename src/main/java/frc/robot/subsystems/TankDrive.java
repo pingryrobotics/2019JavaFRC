@@ -47,25 +47,32 @@ public class TankDrive extends Subsystem{
     @Override 
     public void initDefaultCommand(){}
 
+    /**
+     * Gets the encoder position of the right drive motors
+     * @return Position in inches. Positive is forwards
+     */
     public double getRightPosition(){
         return -ticksToInches(frontRight.getEncoder().getPosition());
     }
 
+    /**
+     * Gets the encoder position of the left drive motors
+     * @return Position in inches. Positive is forwards
+     */
     public double getLeftPosition(){
         return ticksToInches(frontLeft.getEncoder().getPosition());
     }
 
-    public double ticksToInches(double ticks){
+    private double ticksToInches(double ticks){
         return (ticks / 12)*6*Math.PI;
     }
 
+    /**
+     * Resets the encoders to have a current value of 0.
+     */
     public void resetEncoders(){
         frontRight.setEncPosition(0);
         frontLeft.setEncPosition(0);
-    }
-
-    public void moveForwardDistance(double distance){
-        
     }
 
     /*public void move(double pow1, double pow2){
