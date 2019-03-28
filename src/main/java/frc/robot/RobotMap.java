@@ -9,7 +9,7 @@ package frc.robot;
 public class RobotMap {
 
   public static final int 
-        frontLeftID = 21, //Should be 21
+        frontLeftID = 21,
         frontRightID = 20,
         backLeftID =24,
         backRightID = 23,

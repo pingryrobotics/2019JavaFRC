@@ -21,8 +21,12 @@ public class DriveForDistance extends Command {
   public DriveForDistance(double power, double distance) {
     this.power = Math.abs(power);
     target = distance;
-    Robot.drive.resetEncoders();
     requires(Robot.drive);
+  }
+
+  @Override
+  protected void initialize(){
+    Robot.drive.resetEncoders();
   }
 
   // Called repeatedly when this Command is scheduled to run

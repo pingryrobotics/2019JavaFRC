@@ -9,8 +9,8 @@ public class ExtendFront extends Command{
      * @param power Speed (-1 to 1) to extend. Negative will retract.
      */
     public ExtendFront(double power){
-        this.power = Math.abs(power);
         requires(Robot.liftFront);
+        this.power = power;
     }
     public void intitialize(){} 
     public void execute(){

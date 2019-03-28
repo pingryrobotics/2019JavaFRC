@@ -20,6 +20,9 @@ public class TankDrive extends Subsystem{
     TalonSRX backLeft;*/
     
     public double powerCoef = 1.0;
+
+    public double leftZeroEnc = 0;
+    public double rightZeroEnc = 0;
     
 
     /**

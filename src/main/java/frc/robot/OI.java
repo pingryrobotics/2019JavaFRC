@@ -51,7 +51,7 @@ public class OI {
   Button lowerPost2 = new JoystickButton(drive2, 2);
   Button raisePost2 = new JoystickButton(drive2, 3);
 
-  Button followLine = new JoystickButton(drive2, 2);
+  Button followLine = new JoystickButton(drive2, 11);
 
   public OI(){
 

@@ -9,6 +9,7 @@ public class ExtendBack extends Command{
      */
     public ExtendBack(double power){
         requires(Robot.liftBack);
+        this.power = power;
     }
     public boolean isFinished(){
         return power < 0?Robot.liftBack.isRetracted():false;

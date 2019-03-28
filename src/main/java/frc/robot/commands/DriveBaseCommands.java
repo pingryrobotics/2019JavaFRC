@@ -20,16 +20,19 @@ public class DriveBaseCommands extends Command{
         double leftPow = 0;
         double rightPow = 0;
         //Fine motor controls
-        if(Robot.oi.drive1.getRawButton(11) || Robot.oi.drive2.getRawButton(5)){
+        if(Robot.oi.drive1.getRawButton(9)){
+            
+        }
+        else if(Robot.oi.drive1.getRawButton(11) || Robot.oi.drive2.getRawButton(5)){
             leftPow = 0.15;
             rightPow = 0.15;
         }else if(Robot.oi.drive1.getRawButton(10) || Robot.oi.drive2.getRawButton(4)){
             leftPow = -0.15;
             rightPow = -0.15;
         }else if (Robot.oi.drive2.getRawButton(1)){ //TODO: find button number, tune pTurn
-            double pTurn = 0.01; //Power % per degree
+            double pTurn = 0.02; //Power % per degree
             double steeringModifier = Robot.tx.getDouble(0)*pTurn;
-            double forwardPower = 0.6;
+            double forwardPower = 0.2;
             leftPow = forwardPower + steeringModifier;
             rightPow = forwardPower -  steeringModifier;
         }else{

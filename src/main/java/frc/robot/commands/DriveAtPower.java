@@ -20,6 +20,7 @@ public class DriveAtPower extends Command {
    */
   public DriveAtPower(double power, double time) {
     setTimeout(time);
+    this.power = power;
     requires(Robot.drive);
   }
 

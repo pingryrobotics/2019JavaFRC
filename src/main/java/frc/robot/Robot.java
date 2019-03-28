@@ -60,9 +60,10 @@ public class Robot extends TimedRobot {
 
   public static AutoLift autoLift;
 
-  public static boolean chassisLiftMode = true;
-  static final boolean joysticks = true;
-  static final boolean triggers = !joysticks;
+  public static int chassisLiftMode = 0;
+  public static final int joysticks = 0;
+  public static final int triggers = 1;
+  public static final int auto = 2;
 
   public static NetworkTableEntry tx;
   public static NetworkTableEntry slope;
@@ -224,7 +225,9 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("IntakePosition", intake.getPosition());
     SmartDashboard.putNumber("Encoder position back lift", liftBack.getPosition());
     //SmartDashboard.putNumber("Drive Encoder", drive.getLeftPosition()/12);
-    if((oi.drive3.getRawAxis(3)> 0.2 || oi.drive3.getRawAxis(2)>0.2) && chassisLiftMode != triggers){
+    if(chassisLiftMode ==  auto){
+
+    }else if((oi.drive3.getRawAxis(3)> 0.2 || oi.drive3.getRawAxis(2)>0.2) && chassisLiftMode != triggers){
       chassisLiftMode = triggers;
       gyro.zero(); 
       liftBothGyro.start();
@@ -233,6 +236,7 @@ public class Robot extends TimedRobot {
       liftFrontJoy.start();
       liftBackJoy.start();
     }
+
   }
 
   public HoldDrivePosition h;
@@ -240,7 +244,7 @@ public class Robot extends TimedRobot {
   public void testInit() {
 
     //TODO: Make sure HoldDrivePosition works
-    h = new HoldDrivePosition(10);
+    h = new HoldDrivePosition(0.1);
     h.start();
     //autoLift.start();
     //jetson.turnOn();

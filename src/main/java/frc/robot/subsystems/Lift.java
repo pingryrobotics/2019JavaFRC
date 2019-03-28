@@ -29,7 +29,7 @@ public class Lift extends Subsystem{
      * @param pow Power to lift (-1 to 1). +1 is retract, -1 is extend
      */
     public void lift(double pow){
-        lift.set(ControlMode.PercentOutput, pow);
+        lift.set(ControlMode.PercentOutput, -pow);
     }
 
     /**

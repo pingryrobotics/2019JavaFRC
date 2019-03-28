@@ -39,6 +39,7 @@ public class RaiseChassisToHeight extends PIDCommand {
   protected void initialize() {
     Robot.liftBack.zero();
     Robot.gyro.zero();
+    Robot.chassisLiftMode = Robot.auto;
     this.setSetpoint(0);
   }
 
@@ -74,7 +75,7 @@ public class RaiseChassisToHeight extends PIDCommand {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return endPosition - Robot.liftBack.getPosition() < 0.5;
+    return endPosition - Robot.liftBack.getPosition() < 0.75;
   }
 
   @Override
