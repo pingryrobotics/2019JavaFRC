@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.lift_commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 public class ExtendBackJoy extends Command{

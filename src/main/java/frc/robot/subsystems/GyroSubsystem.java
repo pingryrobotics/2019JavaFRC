@@ -49,7 +49,7 @@ public class GyroSubsystem extends Subsystem {
   }
 
   public double getRotation(){
-    //TOOD: Check which way is positive
+    //TODO: Check which way is positive
     return imu.getAngleZ() - zeroValueRot;
   }
 

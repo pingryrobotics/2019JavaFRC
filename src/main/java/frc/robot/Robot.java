@@ -23,15 +23,17 @@ import frc.robot.subsystems.Sonar;
 import frc.robot.subsystems.TankDrive;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.Intake;
-import frc.robot.commands.DriveBaseCommands;
-import frc.robot.commands.EndLift;
+import frc.robot.commands.drive_commands.DriveBaseCommands;
+import frc.robot.commands.drive_commands.GyroTurn;
+import frc.robot.commands.lift_commands.EndLift;
 import frc.robot.commands.HoldDrivePosition;
-import frc.robot.commands.IntakePosition;
-import frc.robot.commands.ManualIntake;
-import frc.robot.commands.ExtendBackJoy;
-import frc.robot.commands.ExtendBothGyro;
-import frc.robot.commands.ExtendFrontJoy;
+import frc.robot.commands.intake_commands.IntakePosition;
+import frc.robot.commands.intake_commands.ManualIntake;
+import frc.robot.commands.lift_commands.ExtendBackJoy;
+import frc.robot.commands.lift_commands.ExtendBothGyro;
+import frc.robot.commands.lift_commands.ExtendFrontJoy;
 import frc.robot.commands.ZeroGyro;
+import frc.robot.commands.AutoCargoSide;
 import frc.robot.commands.AutoLift;
 import frc.robot.commands.AutoPickup;
 import frc.robot.commands.CalibrateGyro;
@@ -127,6 +129,10 @@ public class Robot extends TimedRobot {
     //Initialize the Operator Interface
     oi = new OI();
 
+    m_chooser.addOption("Manual", driveCommand);
+    m_chooser.addOption("Cargo Left", new AutoCargoSide(true));
+    m_chooser.addOption("Cargo Right", new AutoCargoSide(false));
+
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
     NetworkTable ll = inst.getTable("limelight");
     inst.startClientTeam(2577);
@@ -138,6 +144,8 @@ public class Robot extends TimedRobot {
     
     SmartDashboard.putData("Calibrate Gyro", new CalibrateGyro());
     SmartDashboard.putData("Zero Gyro", new ZeroGyro());
+
+    SmartDashboard.putData("Autonomous", m_chooser);
 
     limelightLed.setNumber(limelightOn);
 
@@ -189,15 +197,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     limelightLed.setNumber(limelightOn);
-    driveCommand.start();
     m_autonomousCommand = m_chooser.getSelected();
-
-    /*
-     * String autoSelected = SmartDashboard.getString("Auto Selector",
-     * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-     * = new MyAutoCommand(); break; case "Default Auto": default:
-     * autonomousCommand = new ExampleCommand(); break; }
-     */
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -211,7 +211,10 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     Scheduler.getInstance().run();
-
+    if(oi.drive1.getRawButton(2) || oi.drive2.getRawButton(2)){
+      m_autonomousCommand.cancel();
+      if(!driveCommand.isRunning()) driveCommand.start();
+    }
   }
 
   @Override
@@ -292,9 +295,11 @@ public class Robot extends TimedRobot {
     }
   }
 
-  public HoldDrivePosition h;
+  public GyroTurn g;
   @Override
   public void testInit() {
+    g = new GyroTurn(90, 0.5, 0.1, 0, 0);
+    g.start();
   }
 
   /**

@@ -12,9 +12,9 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 //import frc.robot.commands.AutoLift;
 //import frc.robot.commands.DriveTowardsTarget;
 import frc.robot.commands.DropHatchOff;
-import frc.robot.commands.ExtendBoth;
-import frc.robot.commands.IntakePosition;
-import frc.robot.commands.IntakePower;
+import frc.robot.commands.intake_commands.IntakePosition;
+import frc.robot.commands.intake_commands.IntakePower;
+import frc.robot.commands.lift_commands.ExtendBack;
 import edu.wpi.first.wpilibj.Joystick;
 
 
@@ -59,7 +59,7 @@ public class OI {
     //collectHatch2.whenPressed(new IntakePosition(16));
 
     //autoClimb.whenPressed(new AutoLift());
-    cancelClimb.whenPressed(new ExtendBoth(-1.0));
+    cancelClimb.whenPressed(new ExtendBack(-1.0));
 
 
     lowerPost.whenPressed(new IntakePower(-0.5));

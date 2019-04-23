@@ -5,32 +5,23 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.drive_commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class DriveForDistance extends Command {
+public class DriveAtPower extends Command {
   double power;
-  double target;
-  /**
-   * Drives at a specified power until a distance is reached.
-   * @param power Motor power to move at (0 to 1)
-   * @param distance Distance (positive or negative) to move in inches
-   */
-  public DriveForDistance(double power, double distance) {
-    target = distance;
-    if(distance < 0){
-      this.power = -Math.abs(power);
-    }else{
-      this.power = Math.abs(power);
-    }
-    requires(Robot.drive);
-  }
 
-  @Override
-  protected void initialize(){
-    Robot.drive.resetEncoders();
+  /**
+   * Drives at a given power for a given time.
+   * @param power Power to drive at
+   * @param time Time to drive for before timing out.
+   */
+  public DriveAtPower(double power, double time) {
+    setTimeout(time);
+    this.power = power;
+    requires(Robot.drive);
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -42,11 +33,7 @@ public class DriveForDistance extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    if(target < 0){ //If we are moving backwards
-      return Robot.drive.getLeftPosition() < target && Robot.drive.getRightPosition() < target;
-    }else{ //If we are moving forwards
-      return Robot.drive.getLeftPosition() > target && Robot.drive.getRightPosition() > target;
-    }
+    return isTimedOut();
   }
 
   // Called once after isFinished returns true

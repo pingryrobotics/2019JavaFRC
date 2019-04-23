@@ -9,6 +9,10 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import frc.robot.Robot;
+import frc.robot.commands.drive_commands.DriveAtPower;
+import frc.robot.commands.drive_commands.DriveForDistance;
+import frc.robot.commands.lift_commands.ExtendBack;
+import frc.robot.commands.lift_commands.ExtendFront;
 
 public class AutoLift extends CommandGroup {
   /**

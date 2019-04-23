@@ -5,17 +5,19 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.drive_commands;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.PIDCommand;
 import frc.robot.Robot;
 
-public class GyroTurn extends Command {
+public class GyroTurn extends PIDCommand {
   double target;
   double speed;
-  public GyroTurn(double angle, double speed) {
+  public GyroTurn(double angle, double speed, double p, double i, double d) {
+    super(p,i,d);
     this.speed = Math.abs(speed);
     this.target = angle;
+    this.setSetpoint(this.target);
     requires(Robot.gyro);
     requires(Robot.drive);
   }
@@ -26,20 +28,21 @@ public class GyroTurn extends Command {
     Robot.gyro.zeroRotation();
   }
 
+  protected double returnPIDInput() {
+    return Robot.gyro.getRotation();
+  }
+
   // Called repeatedly when this Command is scheduled to run
   @Override
-  protected void execute() {
-    if(Robot.gyro.getRotation() < target){
-      Robot.drive.move(speed, -speed);
-    }else{
-      Robot.drive.move(-speed, speed);
-    }
+  protected void usePIDOutput(double output) {
+    double power = this.speed*(Math.max(-1, Math.min(1, output)));
+    Robot.drive.move(-power, power);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return Math.abs(target-Robot.gyro.getRotation()) < 0.5;
+    return Math.abs(target-Robot.gyro.getRotation()) < 1;
   }
 
   // Called once after isFinished returns true

@@ -10,15 +10,13 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import frc.robot.commands.intake_commands.IntakePosition;
 
-public class AutoPickup extends CommandGroup {
+public class AutoPlace extends CommandGroup {
   /**
-   * Add your docs here.
+   * Automatically places a hatch using intake positions, limelight, and sonar.
    */
-  public AutoPickup() {
-    addParallel(new IntakePosition(16.5));
+  public AutoPlace() {
     addSequential(new DriveTowardsTarget(0.2, 0.01));
     addSequential(new SonarForward());
-    addSequential(new IntakePosition(23));
-    //addSequential(new DriveAtPower(0.1, 2));
+    addSequential(new IntakePosition(16.5));
   }
 }
