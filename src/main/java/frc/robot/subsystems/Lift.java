@@ -41,7 +41,6 @@ public class Lift extends Subsystem{
 
 
     public boolean isRetracted(){
-        //TODO: Figure out if it is the forward or reverse limit switch
         return lift.getSensorCollection().isRevLimitSwitchClosed();
     }
 

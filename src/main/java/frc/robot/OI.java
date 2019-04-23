@@ -9,13 +9,12 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import frc.robot.commands.AutoLift;
+//import frc.robot.commands.AutoLift;
 //import frc.robot.commands.DriveTowardsTarget;
 import frc.robot.commands.DropHatchOff;
 import frc.robot.commands.ExtendBoth;
 import frc.robot.commands.IntakePosition;
 import frc.robot.commands.IntakePower;
-import frc.robot.commands.LineFollowing;
 import edu.wpi.first.wpilibj.Joystick;
 
 
@@ -29,12 +28,10 @@ public class OI {
   public Joystick drive2 = new Joystick(0);
   public Joystick drive3 = new Joystick(2);
 
-  //TODO: Configure controls for Auto-raise, manual raise, and hatch panel controls for Brian
   Button autoClimb = new JoystickButton(drive3, 8);
   Button cancelClimb = new JoystickButton(drive3, 7);
 
-  Button lowerPost = new JoystickButton(drive3, 5);
-  Button raisePost = new JoystickButton(drive3, 6);
+  Button lowerPost = new JoystickButton(drive3, 6);
 
   Button highRocket = new JoystickButton(drive3, 4);//Y button
   Button midRocket = new JoystickButton(drive3, 2); //B button
@@ -42,33 +39,26 @@ public class OI {
 
   Button dropHatch = new JoystickButton(drive3, 3); //X button
 
-  Button highRocket2 = new JoystickButton(drive1, 3);
-  Button midRocket2 = new JoystickButton(drive1, 5);
-  Button lowRocket2 = new JoystickButton(drive1, 2);
-  Button collectHatch2 = new JoystickButton(drive1, 4);
-  Button dropHatch2 = new JoystickButton(drive1, 1);
+  //Button highRocket2 = new JoystickButton(drive1, 3);
+  //Button midRocket2 = new JoystickButton(drive1, 5);
+  //Button lowRocket2 = new JoystickButton(drive1, 2);
+  //Button collectHatch2 = new JoystickButton(drive1, 4);
+  //Button dropHatch2 = new JoystickButton(drive1, 1);
 
   Button lowerPost2 = new JoystickButton(drive2, 2);
-  Button raisePost2 = new JoystickButton(drive2, 3);
-
-  Button followLine = new JoystickButton(drive2, 11);
 
   public OI(){
 
-    highRocket.whenPressed(new IntakePosition(73.5));
-    highRocket2.whenPressed(new IntakePosition(73.5));
+    highRocket.whenPressed(new IntakePosition(72));
+    //highRocket2.whenPressed(new IntakePosition(73.5));
     midRocket.whenPressed(new IntakePosition(47));
-    midRocket2.whenPressed(new IntakePosition(47));
+    //midRocket2.whenPressed(new IntakePosition(47));
     lowRocket.whenPressed(new IntakePosition(21));
-    lowRocket2.whenPressed(new IntakePosition(21));
+    //lowRocket2.whenPressed(new IntakePosition(21));
 
-    collectHatch2.whenPressed(new IntakePosition(16));
+    //collectHatch2.whenPressed(new IntakePosition(16));
 
-    //TODO: Tune P-values for line following
-    followLine.whenPressed(new LineFollowing(0.1, 0, 0.2, 0.1));
-    followLine.whenReleased(Robot.driveCommand);
-
-    autoClimb.whenPressed(new AutoLift());
+    //autoClimb.whenPressed(new AutoLift());
     cancelClimb.whenPressed(new ExtendBoth(-1.0));
 
 
@@ -77,12 +67,12 @@ public class OI {
     lowerPost2.whenPressed(new IntakePower(-0.5));
     lowerPost2.whenReleased(new IntakePower(0));
 
-    raisePost.whenPressed(new IntakePower(0.5));
-    raisePost.whenReleased(new IntakePower(0));
-    raisePost2.whenPressed(new IntakePower(0.5));
-    raisePost2.whenReleased(new IntakePower(0));
+    //raisePost.whenPressed(new IntakePower(0.5));
+    //raisePost.whenReleased(new IntakePower(0));
+    //raisePost2.whenPressed(new IntakePower(0.5));
+    //raisePost2.whenReleased(new IntakePower(0));
 
     dropHatch.whenPressed(new DropHatchOff());
-    dropHatch2.whenPressed(new DropHatchOff());
+    //dropHatch2.whenPressed(new DropHatchOff());
   }
 }

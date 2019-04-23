@@ -5,6 +5,10 @@ import frc.robot.Robot;
 
 
 public class DriveBaseCommands extends Command{
+    private static double pTurn = 0.01; //Power % per degree
+    /*private static double iTurn = 0;
+    private static double dTurn = 0;*/
+    private static double forwardPower = 0.2;
     /**
      * Drive commands for tank drive using joysticks
      */
@@ -12,7 +16,10 @@ public class DriveBaseCommands extends Command{
         super("Drive Base Commands");
         requires(Robot.drive);
     }
-    public void initialize(){}
+    public void initialize(){
+        /*Robot.aPrevError = 0;
+        Robot.aIntegral = 0;*/
+    }
 
     public void execute(){
         //Allows us to slow down driving as necessary.
@@ -20,21 +27,31 @@ public class DriveBaseCommands extends Command{
         double leftPow = 0;
         double rightPow = 0;
         //Fine motor controls
-        if(Robot.oi.drive1.getRawButton(9)){
+        if(Robot.oi.drive2.getRawButton(3)){
             
-        }
-        else if(Robot.oi.drive1.getRawButton(11) || Robot.oi.drive2.getRawButton(5)){
+        }else if(Robot.oi.drive2.getRawButton(2)){
+            leftPow = -0.05;
+            rightPow = -0.05;
+        }else if(Robot.oi.drive1.getRawButton(11) || Robot.oi.drive2.getRawButton(5)){
             leftPow = 0.15;
             rightPow = 0.15;
         }else if(Robot.oi.drive1.getRawButton(10) || Robot.oi.drive2.getRawButton(4)){
             leftPow = -0.15;
             rightPow = -0.15;
-        }else if (Robot.oi.drive2.getRawButton(1)){ //TODO: find button number, tune pTurn
-            double pTurn = 0.02; //Power % per degree
-            double steeringModifier = Robot.tx.getDouble(0)*pTurn;
-            double forwardPower = 0.2;
-            leftPow = forwardPower + steeringModifier;
-            rightPow = forwardPower -  steeringModifier;
+        }else if (Robot.oi.drive2.getRawButton(1)){
+            double tx = Robot.tx.getDouble(0);
+            double pMod = tx*pTurn;
+            
+           /* double deriv = (tx - Robot.aPrevError) /.02;
+            double dMod = dTurn*deriv;
+
+            Robot.aIntegral += (tx * .02);
+            double iMod = (Robot.aIntegral * iTurn);*/
+
+            leftPow = forwardPower + pMod/* + dMod + iMod*/;
+            rightPow = forwardPower -  pMod/* - dMod - iMod*/;
+
+            //Robot.aPrevError = tx;
         }else{
             //Regular move
             leftPow = -Math.pow(Robot.oi.drive2.getRawAxis(1),1)*driveFactor;

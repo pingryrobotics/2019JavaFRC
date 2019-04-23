@@ -11,7 +11,9 @@ public class ManualIntake extends Command{
     }
 
     public void execute(){
-        Robot.intake.go(Robot.oi.drive3.getRawAxis(1));
+        double power = Robot.oi.drive3.getPOV() == 90?0.6:0;
+        power += Robot.oi.drive3.getPOV() == 270?-0.6:0;
+        Robot.intake.go(power);
     }
     public boolean isFinished(){
         return false;

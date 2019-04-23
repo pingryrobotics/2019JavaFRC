@@ -15,5 +15,6 @@ public class RobotMap {
         backRightID = 23,
         frontTalon = 30,
         backTalon = 31,
-        liftTalon = 32;
+        liftTalon = 32,
+        sonarPort = 0;
 }

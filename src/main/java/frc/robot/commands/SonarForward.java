@@ -10,43 +10,26 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class DriveForDistance extends Command {
-  double power;
-  double target;
-  /**
-   * Drives at a specified power until a distance is reached.
-   * @param power Motor power to move at (0 to 1)
-   * @param distance Distance (positive or negative) to move in inches
-   */
-  public DriveForDistance(double power, double distance) {
-    target = distance;
-    if(distance < 0){
-      this.power = -Math.abs(power);
-    }else{
-      this.power = Math.abs(power);
-    }
+public class SonarForward extends Command {
+  public SonarForward() {
     requires(Robot.drive);
   }
 
+  // Called just before this Command runs the first time
   @Override
-  protected void initialize(){
-    Robot.drive.resetEncoders();
+  protected void initialize() {
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.drive.move(power, power);
+    Robot.drive.move(0.1, 0.1);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    if(target < 0){ //If we are moving backwards
-      return Robot.drive.getLeftPosition() < target && Robot.drive.getRightPosition() < target;
-    }else{ //If we are moving forwards
-      return Robot.drive.getLeftPosition() > target && Robot.drive.getRightPosition() > target;
-    }
+    return Robot.sonar.getDistance() <= 1.5;
   }
 
   // Called once after isFinished returns true
@@ -59,6 +42,5 @@ public class DriveForDistance extends Command {
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    Robot.drive.move(0,0);
   }
 }

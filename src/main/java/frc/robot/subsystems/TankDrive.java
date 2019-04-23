@@ -55,7 +55,7 @@ public class TankDrive extends Subsystem{
      * @return Position in inches. Positive is forwards
      */
     public double getRightPosition(){
-        return -ticksToInches(frontRight.getEncoder().getPosition());
+        return -ticksToInches(frontRight.getEncoder().getPosition()-rightZeroEnc);
     }
 
     /**
@@ -63,7 +63,7 @@ public class TankDrive extends Subsystem{
      * @return Position in inches. Positive is forwards
      */
     public double getLeftPosition(){
-        return ticksToInches(frontLeft.getEncoder().getPosition());
+        return ticksToInches(frontLeft.getEncoder().getPosition()-leftZeroEnc);
     }
 
     private double ticksToInches(double ticks){
@@ -74,8 +74,8 @@ public class TankDrive extends Subsystem{
      * Resets the encoders to have a current value of 0.
      */
     public void resetEncoders(){
-        frontRight.setEncPosition(0);
-        frontLeft.setEncPosition(0);
+        leftZeroEnc = frontLeft.getEncoder().getPosition();
+        rightZeroEnc = frontRight.getEncoder().getPosition();
     }
 
     /*public void move(double pow1, double pow2){

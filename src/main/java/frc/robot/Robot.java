@@ -19,18 +19,21 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Lift;
+import frc.robot.subsystems.Sonar;
 import frc.robot.subsystems.TankDrive;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.Intake;
 import frc.robot.commands.DriveBaseCommands;
 import frc.robot.commands.EndLift;
 import frc.robot.commands.HoldDrivePosition;
+import frc.robot.commands.IntakePosition;
+import frc.robot.commands.ManualIntake;
 import frc.robot.commands.ExtendBackJoy;
 import frc.robot.commands.ExtendBothGyro;
 import frc.robot.commands.ExtendFrontJoy;
-//import frc.robot.commands.ManualIntake;
 import frc.robot.commands.ZeroGyro;
 import frc.robot.commands.AutoLift;
+import frc.robot.commands.AutoPickup;
 import frc.robot.commands.CalibrateGyro;
 import frc.robot.OI;
 
@@ -50,9 +53,11 @@ public class Robot extends TimedRobot {
   public static TankDrive drive;
   public static Intake intake;
   public static GyroSubsystem gyro; 
+  public static Sonar sonar;
 
   public static DriveBaseCommands driveCommand;
-  //public static ManualIntake intakeCommand;
+  public static ManualIntake manualIntake;
+  public static AutoPickup autoPickup;
   
   public static ExtendBackJoy liftBackJoy;
   public static ExtendFrontJoy liftFrontJoy;
@@ -66,16 +71,24 @@ public class Robot extends TimedRobot {
   public static final int auto = 2;
 
   public static NetworkTableEntry tx;
-  public static NetworkTableEntry slope;
-  public static NetworkTableEntry lineDetected;
-  public static NetworkTableEntry lineX;
+  public static NetworkTableEntry limelightLed;
+  public static NetworkTableEntry limelightDist;
+
+  public static int limelightOff = 1;
+  public static int limelightOn = 0;
 
   public static final double gyroLiftP = 0.03;
-  public static final double gyroLiftI = 0.0001;
+  public static final double gyroLiftI = 0.0003;
   public static final double gyroLiftD = 0;
 
   public static Timer t;
+
+  public static IntakePosition collectUp;
+  public static IntakePosition collectPos;
+
   
+  /*public static double aIntegral;
+  public static double aPrevError;*/
 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -89,7 +102,9 @@ public class Robot extends TimedRobot {
     UsbCamera camera =  CameraServer.getInstance().startAutomaticCapture();
     camera.setResolution(160,120);
     camera.setFPS(15);
-    
+    /*aIntegral = 0;
+    aPrevError = 0;*/
+    //Initialize subsystems
     liftFront = new Lift(RobotMap.frontTalon);
     liftBack = new Lift(RobotMap.backTalon);
     drive = new TankDrive();
@@ -97,34 +112,36 @@ public class Robot extends TimedRobot {
     driveCommand = new DriveBaseCommands();
     endLift = new EndLift();
     gyro = new GyroSubsystem();
+    sonar = new Sonar();
 
+    //Initialize commands
     liftFrontJoy = new ExtendFrontJoy();
     liftBackJoy = new ExtendBackJoy();
     liftBothGyro = new ExtendBothGyro(gyroLiftP, gyroLiftI, gyroLiftD);
     autoLift = new AutoLift();
+    collectUp = new IntakePosition(23);
+    manualIntake = new ManualIntake();
+    collectPos = new IntakePosition(16.5);
+    autoPickup = new AutoPickup();
    
+    //Initialize the Operator Interface
     oi = new OI();
 
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
-    NetworkTable table =inst.getTable("vision");
     NetworkTable ll = inst.getTable("limelight");
     inst.startClientTeam(2577);
 
     tx = ll.getEntry("tx"); //Note: in degrees
-    slope = SmartDashboard.getEntry("slope");
-    lineDetected = SmartDashboard.getEntry("lineDetected");
-    lineX = SmartDashboard.getEntry("lineX");
-
+    ll.getEntry("snapshot").setNumber(1);
+    limelightLed = ll.getEntry("ledMode");
+    limelightDist = ll.getEntry("camtran");
     
     SmartDashboard.putData("Calibrate Gyro", new CalibrateGyro());
     SmartDashboard.putData("Zero Gyro", new ZeroGyro());
 
-    SmartDashboard.putNumber("hueMin", 65);
-    SmartDashboard.putNumber("hueMax", 140);
-    SmartDashboard.putNumber("satMin", 200);
-    SmartDashboard.putNumber("satMax", 255);
-    SmartDashboard.putNumber("valMin", 50);
-    SmartDashboard.putNumber("valMax", 255);
+    limelightLed.setNumber(limelightOn);
+
+    Robot.intake.zeroEncoder();
   }
 
   /**
@@ -137,7 +154,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-
+    //double[] def = {99.0,99.0,99.0};
+    //SmartDashboard.putNumber("limeDst", Math.abs(Robot.limelightDist.getDoubleArray(def)[2]));
+    SmartDashboard.putNumber("sonar", Robot.sonar.getDistance());
   }
 
   /**
@@ -148,6 +167,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     driveCommand.cancel();
+    limelightLed.setNumber(limelightOn);
   }
 
   @Override
@@ -168,6 +188,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    limelightLed.setNumber(limelightOn);
     driveCommand.start();
     m_autonomousCommand = m_chooser.getSelected();
 
@@ -195,7 +216,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    limelightLed.setNumber(limelightOn);
     driveCommand.start();
+    gyro.zero();
 
     t = new Timer();
     t.start();
@@ -223,13 +246,15 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
     SmartDashboard.putNumber("IntakePosition", intake.getPosition());
-    SmartDashboard.putNumber("Encoder position back lift", liftBack.getPosition());
+    //SmartDashboard.putNumber("Encoder position back lift", liftBack.getPosition());
+    //SmartDashboard.putNumber("Robot Tip", Robot.gyro.getTip());
     //SmartDashboard.putNumber("Drive Encoder", drive.getLeftPosition()/12);
-    if(chassisLiftMode ==  auto){
-
-    }else if((oi.drive3.getRawAxis(3)> 0.2 || oi.drive3.getRawAxis(2)>0.2) && chassisLiftMode != triggers){
+    if(Robot.oi.drive2.getRawButton(9)){
+      gyro.zero();
+    }
+    if((oi.drive3.getRawAxis(3)> 0.2 || oi.drive3.getRawAxis(2)>0.2) && chassisLiftMode != triggers){
+      gyro.zero();
       chassisLiftMode = triggers;
-      gyro.zero(); 
       liftBothGyro.start();
     }else if((Math.abs(oi.drive3.getRawAxis(1)) > 0.1 || Math.abs(oi.drive3.getRawAxis(5)) > 0.1) && (chassisLiftMode != joysticks)){
       chassisLiftMode = joysticks;
@@ -237,18 +262,39 @@ public class Robot extends TimedRobot {
       liftBackJoy.start();
     }
 
+    if(oi.drive1.getRawButton(3)){
+      if(!autoPickup.isRunning()){
+        autoPickup.start();
+      }
+    }else if(oi.drive1.getRawButton(2)){
+      autoPickup.cancel();
+      Robot.driveCommand.start();
+    }
+
+    if(oi.drive3.getPOV() == 0){
+      collectUp.start();
+    }else if(oi.drive3.getPOV() == 90 || oi.drive3.getPOV() == 270){
+      manualIntake.start();
+    }else if(oi.drive3.getPOV() == 180){
+      collectPos.start();
+    }
+
+    if(oi.drive3.getRawButton(8)){
+      if(!autoLift.isRunning()){
+        autoLift.start();
+      }
+    }else if(oi.drive3.getRawButton(5)){
+      autoLift.cancel();
+      Robot.drive.move(0,0);
+      Robot.liftFront.lift(0);
+      Robot.liftBack.lift(0);
+      Robot.driveCommand.start();
+    }
   }
 
   public HoldDrivePosition h;
   @Override
   public void testInit() {
-
-    //TODO: Make sure HoldDrivePosition works
-    h = new HoldDrivePosition(0.1);
-    h.start();
-    //autoLift.start();
-    //jetson.turnOn();
-    //gyro.calibrate();
   }
 
   /**

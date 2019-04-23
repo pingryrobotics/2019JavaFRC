@@ -10,43 +10,36 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class DriveForDistance extends Command {
-  double power;
+public class GyroTurn extends Command {
   double target;
-  /**
-   * Drives at a specified power until a distance is reached.
-   * @param power Motor power to move at (0 to 1)
-   * @param distance Distance (positive or negative) to move in inches
-   */
-  public DriveForDistance(double power, double distance) {
-    target = distance;
-    if(distance < 0){
-      this.power = -Math.abs(power);
-    }else{
-      this.power = Math.abs(power);
-    }
+  double speed;
+  public GyroTurn(double angle, double speed) {
+    this.speed = Math.abs(speed);
+    this.target = angle;
+    requires(Robot.gyro);
     requires(Robot.drive);
   }
 
+  // Called just before this Command runs the first time
   @Override
-  protected void initialize(){
-    Robot.drive.resetEncoders();
+  protected void initialize() {
+    Robot.gyro.zeroRotation();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.drive.move(power, power);
+    if(Robot.gyro.getRotation() < target){
+      Robot.drive.move(speed, -speed);
+    }else{
+      Robot.drive.move(-speed, speed);
+    }
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    if(target < 0){ //If we are moving backwards
-      return Robot.drive.getLeftPosition() < target && Robot.drive.getRightPosition() < target;
-    }else{ //If we are moving forwards
-      return Robot.drive.getLeftPosition() > target && Robot.drive.getRightPosition() > target;
-    }
+    return Math.abs(target-Robot.gyro.getRotation()) < 0.5;
   }
 
   // Called once after isFinished returns true
@@ -59,6 +52,5 @@ public class DriveForDistance extends Command {
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    Robot.drive.move(0,0);
   }
 }

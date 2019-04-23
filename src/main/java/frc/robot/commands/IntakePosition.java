@@ -20,12 +20,11 @@ public class IntakePosition extends Command{
     }
 
     public boolean isFinished(){
-        //TODO: Add in a threshold for this
-        return Robot.intake.getPositionInches() == this.pos;
+        return Math.abs(Robot.intake.getPositionInches() - this.pos) < 0.75;
     }
 
     @Override
-    public void end(){
+    public void end(){  
       Robot.intake.go(0);
     }
 }

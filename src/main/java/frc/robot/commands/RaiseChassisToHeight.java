@@ -52,16 +52,6 @@ public class RaiseChassisToHeight extends PIDCommand {
   protected void usePIDOutput(double output) {
     double power;
     double current = Robot.liftBack.getPosition();
-    
-    /*if(current < endPosition/2.0){
-      //We need to accelerate upwards:
-      double error = current + 1; //TODO: Change this 1 to a better constant.
-      power = powerLimit*(Math.max(-1, Math.min(1, pAccel*error)));
-    }else {
-      //We need to decelerate:
-      double error = current - endPosition;
-      power = powerLimit*(Math.max(-1, Math.min(1, pAccel*error)));
-    }*/
 
     //We need to decelerate:
     double error = endPosition - current; //Error will normally be positive

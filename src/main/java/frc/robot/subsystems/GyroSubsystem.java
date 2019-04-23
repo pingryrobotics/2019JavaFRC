@@ -15,7 +15,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class GyroSubsystem extends Subsystem {
   public ADIS16448_IMU imu;
-  public double zeroValue = 0;
+  public double zeroValueTip = 0;
+  public double zeroValueRot = 0;
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
@@ -40,15 +41,20 @@ public class GyroSubsystem extends Subsystem {
   }
 
   public void zero(){
-    zeroValue = imu.getAngleX();
+    zeroValueTip = imu.getAngleX(); 
+  }
+
+  public void zeroRotation(){
+    zeroValueRot = imu.getAngleZ();
   }
 
   public double getRotation(){
-    return imu.getAngleZ();
+    //TOOD: Check which way is positive
+    return imu.getAngleZ() - zeroValueRot;
   }
 
   public double getTip(){
-    return imu.getAngleX() - zeroValue; //Positive is forwards
+    return imu.getAngleX() - zeroValueTip; //Positive is forwards
   }
 }
  

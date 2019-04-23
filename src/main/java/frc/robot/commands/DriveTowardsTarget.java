@@ -35,7 +35,7 @@ public class DriveTowardsTarget extends Command {
   @Override
   protected void execute() {
     //If positive, the target is to our right and we need to turn left
-    double turnError = Robot.tx.getDouble(0)*pTurn;
+    double turnError = -Robot.tx.getDouble(0)*pTurn;
 
     Robot.drive.move(power - turnError, power + turnError);
   }
@@ -43,7 +43,12 @@ public class DriveTowardsTarget extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return Robot.lineDetected.getBoolean(false);
+    double[] def = {0,0,0};
+    //double dist = Math.abs(Robot.limelightDist.getDoubleArray(def)[2]);
+    double dist = Robot.sonar.getDistance();
+    return dist < 20;
+    //if(dist == 0) return false;
+    //return dist < 20.0;
   }
 
   // Called once after isFinished returns true

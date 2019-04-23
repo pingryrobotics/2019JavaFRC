@@ -12,8 +12,6 @@ public class Intake extends Subsystem{
     int timeout = 30;
     int minPositionEncoder = 0;
     int maxPositionEncoder = 1337560;
-    //int minPositionEncoder = 0;
-    //int maxPositionEncoder = -5000;
     double minPositionInches = 16;
     double maxPositionInches = 73.5;
 
@@ -35,7 +33,7 @@ public class Intake extends Subsystem{
         shaft.configNominalOutputReverse(0);
         //configPeakOutput is the motor power 
         shaft.configPeakOutputForward(1.0);
-        shaft.configPeakOutputReverse(-1.0);
+        shaft.configPeakOutputReverse(-0.8);
 
         //configuring PIDF parameters
         shaft.config_kF(0, f, timeout);
